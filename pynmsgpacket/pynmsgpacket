@@ -1,0 +1,129 @@
+#!/usr/bin/env python
+
+# Copyright (c) 2015 by Farsight Security, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# pynmsgpacket
+
+import sys
+import time
+import struct
+import socket
+import argparse
+
+import nmsg
+
+
+def main():
+    parser = argparse.ArgumentParser(
+            description="Print IPv4 TCP or UDP packet data from base:packet"
+            " encoded NMSGs and optionally write base:ipconn NMSGs to a"
+            " remote listener")
+    parser.add_argument('input', nargs='?', type=argparse.FileType('r'),
+                        help="input file, also accepts input from pipeline")
+    parser.add_argument("-c", "--count", type=int,
+                        help="stop after count payloads")
+    parser.add_argument("-s", "--socket",
+                        help="write binary NMSGs to socket"
+                        " (i.e., 127.0.0.1/9430)")
+    args = parser.parse_args()
+
+    if not sys.stdin.isatty():
+        args.input = sys.stdin
+
+    if not args.input or args.count == 0:
+        parser.print_help()
+        exit(1)
+
+    count = args.count or 0
+
+    if args.socket:
+        addr, port = args.socket.split('/')
+        nmsg_out = nmsg.output.open_sock(addr, int(port))
+        nmsg_out.set_buffered(False)
+
+    nmsg_in = nmsg.input.open_file(args.input)
+    # ensure base:packet
+    nmsg_in.set_filter_msgtype('base', 'packet')
+
+    while True:
+        if args.count:
+            if count == 0:
+                break
+
+        msg_in = nmsg_in.read()
+        if not msg_in:
+            break
+
+        if msg_in['payload_type'] == "IP":
+            # only process IPv4 TCP or UDP packets
+            if is_ipv4_tcp_udp(msg_in):
+                nmsg.print_nmsg_header(msg_in, sys.stdout)
+                ip_src, port_src, ip_dst, port_dst, proto = get_pkt_info(
+                                                                        msg_in)
+                print "{}.{} --> {}.{} ({})".format(
+                        ip_src, port_src, ip_dst, port_dst, proto)
+
+                if args.socket:
+                    msg_out = nmsg.msgtype.base.ipconn()
+                    msg_out['srcip'] = ip_src
+                    msg_out['dstip'] = ip_dst
+                    msg_out['srcport'] = port_src
+                    msg_out['dstport'] = port_dst
+                    msg_out['proto'] = proto
+                    t = time.time()
+                    msg_out.time_sec = int(t)
+                    # NMSG supports nanosecond timestamps
+                    msg_out.time_nsec = int((t - int(t)) * 1E9)
+                    nmsg_out.write(msg_out)
+        if args.count:
+            count -= 1
+
+
+def is_ipv4_tcp_udp(msg):
+    # AND off first 4 bits of payload (IP packet) to ensure IP version is 4
+    if int(ord(msg['payload'][0])) & 0x04 == 4:
+        if get_proto(msg) == socket.IPPROTO_TCP or socket.IPPROTO_UDP:
+            return True
+    return False
+
+
+def get_pkt_info(msg):
+    proto = get_proto(msg)
+    ip_src, ip_dst = get_ips(msg)
+    port_src, port_dst = get_ports(msg)
+    return ip_src, port_src, ip_dst, port_dst, proto
+
+
+def get_ips(msg):
+    # IP source address is bytes 12-16, destination addres is bytes 16-20
+    ip_src = socket.inet_ntoa(msg['payload'][12:16])
+    ip_dst = socket.inet_ntoa(msg['payload'][16:20])
+    return ip_src, ip_dst
+
+
+def get_proto(msg):
+    # IP protocol number is byte 9
+    return ord(msg['payload'][9])
+
+
+def get_ports(msg):
+    # TCP/UDP port are first fields in transport header, bytes 20-22 and 22-24
+    port_src = struct.unpack('!H', msg['payload'][20:22])[0]
+    port_dst = struct.unpack('!H', msg['payload'][22:24])[0]
+    return port_src, port_dst
+
+
+if __name__ == "__main__":
+    main()
