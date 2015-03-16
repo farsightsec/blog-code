@@ -4,7 +4,7 @@ TARGETS=dnsqr_edns_filter
 default: dnsqr_edns_filter
 
 dnsqr_edns_filter: main.o edns_filter.o
-	$(CC) $(CFLAGS) -o $@ main.o edns_filter.o -lnmsg -lwdns -lxs
+	$(CC) $(CFLAGS) -o $@ main.o edns_filter.o -lnmsg -lwdns
 
 .c.o:
 	$(CC) $(CFLAGS) -c $<

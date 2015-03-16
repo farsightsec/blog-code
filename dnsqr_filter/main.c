@@ -18,14 +18,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <string.h>
+#include <netdb.h>
 
 #include <err.h>
 
 #include <nmsg.h>
 #include <nmsg/base/dnsqr.pb-c.h>
 #include <nmsg/base/defs.h>
-
-#include <xs/xs.h>
 
 nmsg_output_t filter_output;
 
@@ -54,12 +54,47 @@ void err_nmsg_res(int eval, nmsg_res res, const char *fmt, ...) {
 }
 
 int
+open_sock(const char *sockspec, int do_bind) {
+	char *spec = strdup(sockspec), *port;
+	struct addrinfo hints = {0}, *res, *r;
+	int ai_err, s;
+
+	port = index(spec, '/');
+	if (!port)
+		errx(1, "invalid socket spec '%s'\n", sockspec);
+	*port++ = 0;
+
+	hints.ai_family = AF_UNSPEC;
+	hints.ai_socktype = SOCK_DGRAM;
+	hints.ai_flags = AI_ADDRCONFIG | AI_NUMERICHOST | AI_NUMERICSERV;
+	if (do_bind) 
+		hints.ai_flags |= AI_PASSIVE;
+
+	ai_err = getaddrinfo(spec, port, &hints, &res);
+	if (ai_err)
+		errx(1, "%s", gai_strerror(ai_err));
+
+	free(spec);
+	for ( r = res; r; r = r->ai_next) {
+		s = socket(r->ai_family, r->ai_socktype, r->ai_protocol);
+		if (s == -1) continue;
+		if (do_bind) {
+			if (bind(s, r->ai_addr, r->ai_addrlen) < 0) 
+				err(1, "bind %s", sockspec);
+		} else {
+			if (connect(s, r->ai_addr, r->ai_addrlen) < 0)
+				err(1, "connect %s", sockspec);
+		}
+		return s;
+	}
+}
+
+int
 main(int argc, char **argv) {
 	nmsg_io_t io;
 	nmsg_output_t output;
 	nmsg_input_t input;
 	nmsg_res res;
-	void *xs_ctx = xs_init();
 	char c;
 	int fd;
 
@@ -75,7 +110,7 @@ main(int argc, char **argv) {
 		return (EXIT_FAILURE);
 	}
 
-	while ( (c=getopt(argc, argv, "r:C:L:S:w:h")) != -1 ) {
+	while ( (c=getopt(argc, argv, "r:C:l:s:w:h")) != -1 ) {
 		switch(c) {
 
 		case 'r':
@@ -97,19 +132,19 @@ main(int argc, char **argv) {
 				err_nmsg_res(EXIT_FAILURE, res, "[-C %s] nmsg_io_add_input_channel(%s) failed", optarg);
 
 			break;
-		case 'L':
-			input = nmsg_input_open_xs_endpoint(xs_ctx, optarg);
+		case 'l':
+			input = nmsg_input_open_sock(open_sock(optarg, 1));
 			if (input == NULL) 
-				errx(EXIT_FAILURE, "[-L %s] nmsg_input_open_xs_endpoint() failed.", optarg);
+				errx(EXIT_FAILURE, "[-L %s] nmsg_input_open_sock() failed.", optarg);
 			res = nmsg_io_add_input(io, input, NULL);
 			if (res != nmsg_res_success)
 				err_nmsg_res(EXIT_FAILURE, res, "[-L %s] nmsg_io_add_input() failed.", optarg);
 			break;
 
-		case 'S':
-			filter_output = nmsg_output_open_xs_endpoint(xs_ctx, optarg, NMSG_WBUFSZ_JUMBO);
+		case 's':
+			filter_output = nmsg_output_open_sock(open_sock(optarg, 0), NMSG_WBUFSZ_JUMBO);
 			if (filter_output == NULL)
-				errx(EXIT_FAILURE, "[-S %s] nmsg_output_open_xs_endpoint() failed.", optarg);
+				errx(EXIT_FAILURE, "[-S %s] nmsg_output_open_sock() failed.", optarg);
 			break;
 
 		case 'w': 
