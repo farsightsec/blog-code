@@ -22,7 +22,7 @@ dnsqr_filter(nmsg_message_t msg) {
 	nmsg_res nres;
 	wdns_res wres;
 
-	wdns_message_t resp = {0}, req = {0};
+	wdns_message_t response = {0}, query = {0};
 	uint8_t *data;
 	uint16_t *rcode;
 	size_t len;
@@ -34,20 +34,20 @@ dnsqr_filter(nmsg_message_t msg) {
 	nres = nmsg_message_get_field(msg, "response", 0, (void **)&data, &len);
 	if (nres != nmsg_res_success) return result;
 
-	wres = wdns_parse_message(&resp, data, len);
+	wres = wdns_parse_message(&response, data, len);
 	if (wres != wdns_res_success) return result;
 
-	if (!resp.edns.present) {
-		nres = nmsg_message_get_field(msg, "request", 0,
+	if (!response.edns.present) {
+		nres = nmsg_message_get_field(msg, "query", 0,
 						(void **)&data, &len);
 		if (nres == nmsg_res_success) {
-			wres = wdns_parse_message(&req, data, len);
+			wres = wdns_parse_message(&query, data, len);
 			if (wres == wdns_res_success) 
-				result = req.edns.present;
+				result = query.edns.present;
 		}
 	}
 
-	wdns_clear_message(&req);
-	wdns_clear_message(&resp);
+	wdns_clear_message(&query);
+	wdns_clear_message(&response);
 	return result;
 }
