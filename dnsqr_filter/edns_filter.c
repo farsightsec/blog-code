@@ -24,12 +24,8 @@ dnsqr_filter(nmsg_message_t msg) {
 
 	wdns_message_t response = {0}, query = {0};
 	uint8_t *data;
-	uint16_t *rcode;
 	size_t len;
 	int result = 0;
-
-	nres = nmsg_message_get_field(msg, "rcode", 0, (void **)&rcode, NULL);
-	if (nres != nmsg_res_success) return result;
 
 	nres = nmsg_message_get_field(msg, "response", 0, (void **)&data, &len);
 	if (nres != nmsg_res_success) return result;
