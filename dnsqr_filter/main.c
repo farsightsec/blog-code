@@ -161,10 +161,10 @@ main(int argc, char **argv) {
 			fprintf(stderr, "Usage: %s\n"
 				"[-h]		Display help text\n"
 				"[-r file]	Read nmsg data from file\n"
-				"[-L xep]	Read nmsg data from XS endpoint\n"
+				"[-l ip/port]	Read nmsg data datagram socket\n"
 				"[-C channel]	Read nmsg data from channel\n"
 				"[-w file]	Write nmsg data to file\n"
-				"[-S xep]	Write nmsg data to XS endpoint\n",
+				"[-s ip/port]	Write nmsg data to datagram socket\n",
 				argv[0]);
 			exit(1);
 		}
