@@ -75,7 +75,7 @@ open_sock(const char *sockspec, int do_bind) {
 		errx(1, "%s", gai_strerror(ai_err));
 
 	free(spec);
-	for ( r = res; r; r = r->ai_next) {
+	for (r = res; r; r = r->ai_next) {
 		s = socket(r->ai_family, r->ai_socktype, r->ai_protocol);
 		if (s == -1) continue;
 		if (do_bind) {
@@ -85,8 +85,10 @@ open_sock(const char *sockspec, int do_bind) {
 			if (connect(s, r->ai_addr, r->ai_addrlen) < 0)
 				err(1, "connect %s", sockspec);
 		}
+		freeaddrinfo(res);
 		return s;
 	}
+	err(1, "could not open %s", sockspec);
 }
 
 int
