@@ -4,5 +4,5 @@ A resuable example of how to use the [`nmsg`](https://github.com/farsightsec/nms
 
 ## example
 
-    $ ./dnsqr_edns_filter -C ch202 -S ipc:///tmp/noedns.sock,pubsub,accept &
-    $ nmsgtool -L ipc:///tmp/noedns.sock,pubsub,connect -c 100
+    $ nmsgtool -l 127.0.0.1/5353 -w ... &
+    $ ./dnsqr_edns_filter -C ch202 -s 127.0.0.1/5353
