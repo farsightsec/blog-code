@@ -17,3 +17,8 @@ encoded NMSGs and send to them to a network socket. It was originally published
 in
 [Farsight Security's Network Message, Volume 5: The Python Programming API](https://www.farsightsecurity.com/Blog/20150225-mschiffm-nmsg-api-python/).
 
+## [dnsqr_filter](dnsqr_filter)
+A reusable example of an [`nmsg`](https://github.com/farsightsec/nmsg) filter
+using [`wdns`](https://github.com/farsightsec/wdns) to filter interesting
+DNS traffic out of a passive DNS stream. Originally published in
+[Processing Passive DNS With the nmsg C API](https://www.farsightsecurity.com/Blog/20150318-cmikk-processing-pdns/).
