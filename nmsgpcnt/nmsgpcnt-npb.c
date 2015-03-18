@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 {
     int fd, n;
     uint16_t vf;
-    uint32_t processed;
+    uint32_t processed, containers;
     uint8_t *p = NULL, *buf = NULL;
     struct stat stat_buf;
     nmsg_Nmsg message;
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
     }
 
     /* loop through file, processing as many containers as we find */
-    for (payloads = processed = 0; processed < n; )
+    for (containers = payloads = processed = 0; processed < n; )
     {
         uint32_t p_len;
 
@@ -154,14 +154,13 @@ int main(int argc, char **argv)
             fprintf(stderr, "decoding failed: %s\n", PB_GET_ERROR(&stream));
             goto done;
         }
-#if DEBUG
-        printf("%d byte NMSG container has %d payloads\n", p_len, payloads);
-#endif
+        containers++;
         processed += p_len + 10;
         payloads_total += payloads;
         payloads = 0;
     }
-    printf("total payloads: %d\n", payloads_total);
+    printf("total containers: %d total payloads: %d\n", containers,
+            payloads_total);
 
 done:
     if (fd)

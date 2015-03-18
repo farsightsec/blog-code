@@ -48,7 +48,7 @@ int main(int argc, char **argv)
 {
     int fd, n;
     uint16_t vf;
-    uint32_t payloads, processed;
+    uint32_t payloads, processed, containers;
     uint8_t *p = NULL, *buf = NULL;
     struct stat stat_buf;
     Nmsg__Nmsg *message;
@@ -86,7 +86,7 @@ int main(int argc, char **argv)
     }
 
     /* loop through file, processing as many containers as we find */
-    for (payloads = processed = 0; processed < n; )
+    for (containers = payloads = processed = 0; processed < n; )
     {
         uint32_t p_len;
 
@@ -131,16 +131,12 @@ int main(int argc, char **argv)
             fprintf(stderr, "nmsg__nmsg__unpack() error");
             goto done;
         }
-
-#if DEBUG
-        printf("%d byte NMSG container has %d payloads\n", p_len,
-                message->n_payloads);
-#endif
+        containers++;
         processed += p_len + 10;
         payloads += message->n_payloads;
         nmsg__nmsg__free_unpacked(message, 0);
     }
-    printf("total payloads: %d\n", payloads);
+    printf("total containers: %d total payloads: %d\n", containers, payloads);
 
 done:
     if (fd)

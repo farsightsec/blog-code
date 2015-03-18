@@ -173,7 +173,7 @@ int main(int argc, char **argv)
 {
     int fd, n;
     uint16_t vf;
-    uint32_t payloads, processed;
+    uint32_t payloads, processed, containers;
     uint8_t *p = NULL, *buf = NULL;
     struct stat stat_buf;
     nmsg_gpbd_data_t nmsg_data;
@@ -211,7 +211,7 @@ int main(int argc, char **argv)
     }
 
     /* loop through file, processing as many containers as we find */
-    for (payloads = processed = 0; processed < n; )
+    for (containers = payloads = processed = 0; processed < n; )
     {
         uint32_t p_len;
 
@@ -256,14 +256,11 @@ int main(int argc, char **argv)
             fprintf(stderr, "GPB parse error\n");
             goto done;
         }
-#if DEBUG
-        printf("%d byte NMSG container has %d payloads\n", p_len,
-                nmsg_data.n_payloads);
-#endif
+        containers++;
         processed += p_len + 10;
         payloads += nmsg_data.n_payloads;
     }
-    printf("total payloads: %d\n", payloads);
+    printf("total containers: %d payloads: %d\n", containers, payloads);
 
 done:
     if (fd)
