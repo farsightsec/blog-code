@@ -46,38 +46,15 @@ static const char magic[] = NMSG_MAGIC;
     while (0)
 
 /* confirm NMSG header */
-#define CHECK_MAGIC(p)                                          \
-    if (memcmp(p, magic, sizeof (magic)) != 0)                  \
-    {                                                           \
-        fprintf(stderr, "NMSG header verification failed\n");   \
-        goto done;                                              \
-    }
+#define CHECK_MAGIC(p)          memcmp(p, magic, sizeof (magic))
 
-/* confirm NMSG protocol version */
-#define CHECK_VERSION(p, vf)                                    \
-    load_net16(p, &vf);                                         \
-    if ((vf & 0xFF) != 2U)                                      \
-    {                                                           \
-        fprintf(stderr, "NMSG version check failed\n");         \
-        goto done;                                              \
-    }
-
-/* we don't process compressed payloads */
-#define CHECK_ZLIB(flags)                                       \
-    if (flags >> 8 & NMSG_FLAG_ZLIB)                            \
-    {                                                           \
-        printf("NMSG container contains compressed payloads\n");\
-        goto done;                                              \
-    }
-
-/* we don't process fragmened payloads */
-#define CHECK_FRAG(flags)                                       \
-    if (flags >> 8 & NMSG_FLAG_FRAGMENT)                        \
-    {                                                           \
-        printf("NMSG container contains fragmented payloads\n");\
-        goto done;                                              \
-    }
-
-/* get container size */
-#define GET_CONTAINER_SIZE(p, size)                             \
-        size = ntohl(*((uint32_t* )(p)));
+/* load NMSG version and flags from header */
+#define LOAD_VERSION_AND_FLAGS(p, v, f)             \
+    do                                              \
+    {                                               \
+        uint16_t vf;                                \
+        load_net16(p, &vf);                         \
+        v =  vf & 0xFF;                             \
+        f =  vf >> 8;                               \
+    }                                               \
+    while (0)

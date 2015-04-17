@@ -154,31 +154,50 @@ int main(int argc, char **argv)
     /* loop through file, processing as many containers as we find */
     for (containers = payloads = processed = 0; processed < n; )
     {
-        int ret;
-        uint16_t vers_flags;
-        uint32_t p_len;
-        uint8_t *p = NULL;
+        uint32_t c_len;
+        uint8_t *p = NULL, version, flags;
         nmsg_pb_data_t nmsg_data;
 
         p = buf + processed;
 
         /* confirm NMSG header */
-        CHECK_MAGIC(p);
+        if (CHECK_MAGIC(p) != 0)
+        {
+            fprintf(stderr, "NMSG header verification failed\n");
+            break;
+        }
+
+        /* step over magic */
         p += 4;
 
+        /* load version and flags */
+        LOAD_VERSION_AND_FLAGS(p, version, flags);
+
         /* confirm NMSG protocol version */
-        CHECK_VERSION(p, vers_flags);
+        if (version != 2U)
+        {
+            fprintf(stderr, "NMSG version check failed\n");
+            break;
+        }
 
-        /* we don't process compressed or fragmened payloads */
-        CHECK_ZLIB(vers_flags);
+        /* we don't process compressed payloads */
+        if (flags & NMSG_FLAG_ZLIB)
+        {
+            fprintf(stderr, "NMSG container contains compressed payloads\n");
+            break;
+        }
 
-        /* we don't process compressed or fragmened payloads */
-        CHECK_FRAG(vers_flags);
+        /* we don't process fragmented payloads */
+        if (flags & NMSG_FLAG_FRAGMENT)
+        {
+            fprintf(stderr, "NMSG container contains fragmented payloads\n");
+            break;
+        }
 
         p += 2;
 
-        /* get container size */
-        GET_CONTAINER_SIZE(p, p_len);
+        /* get container length */
+        c_len = ntohl(*((uint32_t* )(p)));
 
         p += 4;
 
