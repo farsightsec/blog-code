@@ -24,8 +24,7 @@
 #include <fcntl.h>
 #include <stdbool.h>
 
-#define NMSG_MAGIC {'N', 'M', 'S', 'G'}
-static const char magic[] = NMSG_MAGIC;
+#include "./common.h"
 
 /* protocol buffer constants */
 #define PB_WIRETYPE_MASK    7   /* AND mask to get wire type bits */
@@ -171,12 +170,9 @@ des(const uint8_t *pb_data, uint32_t p_len, nmsg_gpbd_data_t *nmsg_data)
 
 int main(int argc, char **argv)
 {
-    int fd, n;
-    uint16_t vf;
+    ssize_t n;
     uint32_t payloads, processed, containers;
-    uint8_t *p = NULL, *buf = NULL;
-    struct stat stat_buf;
-    nmsg_gpbd_data_t nmsg_data;
+    uint8_t *buf = NULL;
 
     if (argc != 2)
     {
@@ -186,87 +182,58 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    fd = open(argv[1], O_RDONLY);
-    if (fd == -1)
-    {
-        fprintf(stderr, "can't open %s\n", argv[1]);
-        goto done;
-    }
-    if (fstat(fd, &stat_buf) == -1)
-    {
-        fprintf(stderr, "can't stat %s\n", argv[1]);
-        goto done;
-    }
-    buf = malloc(stat_buf.st_size);
+    buf = load_container(argv[1], &n);
     if (buf == NULL)
     {
-        fprintf(stderr, "can't malloc\n");
-        goto done;
-    }
-    n = read(fd, buf, stat_buf.st_size);
-    if (n != stat_buf.st_size)
-    {
-        fprintf(stderr, "can't read %s\n", argv[1]);
         goto done;
     }
 
     /* loop through file, processing as many containers as we find */
     for (containers = payloads = processed = 0; processed < n; )
     {
+        int ret;
+        uint16_t vf;
         uint32_t p_len;
+        uint8_t *p = NULL;
+        nmsg_pb_data_t nmsg_data;
 
         p = buf + processed;
 
         /* confirm NMSG header */
-        if (memcmp(p, magic, sizeof (magic)) != 0)
-        {
-            fprintf(stderr, "NMSG header verification failed\n");
-            goto done;
-        }
+        CHECK_MAGIC(p);
         p += 4;
 
         /* confirm NMSG protocol version */
-        load_net16(p, &vf);
-        if ((vf & 0xFF) != 2U)
-        {
-            fprintf(stderr, "NMSG version check failed\n");
-            goto done;
-        }
+        CHECK_VERSION(p);
 
         /* we don't process compressed or fragmened payloads */
-        if (vf >> 8 & NMSG_FLAG_ZLIB)
-        {
-            printf("NMSG container contains compressed payloads\n");
-            goto done;
-        }
-        if (vf >> 8 & NMSG_FLAG_FRAGMENT)
-        {
-            printf("NMSG container contains fragmented payloads\n");
-            goto done;
-        }
+        CHECK_ZLIB(vf);
+
+        /* we don't process compressed or fragmened payloads */
+        CHECK_FRAG(vf);
+
         p += 2;
 
-        /* get container length */
-        p_len = ntohl(*((uint32_t* )(p)));
+        /* get container size */
+        GET_CONTAINER_SIZE(p, p_len);
+
         p += 4;
 
-        /* deserialize the GPB encoded container */
-        if (des(p, p_len, &nmsg_data) == -1)
+        /* deserialize the protobuf encoded container */
+        ret = decode_pb(p, p_len, &nmsg_data);
+        if (ret < 0)
         {
-            fprintf(stderr, "GPB parse error\n");
+            fprintf(stderr, "error: can't parse NMSG payload\n");
             goto done;
         }
         containers++;
         processed += p_len + 10;
         payloads += nmsg_data.n_payloads;
     }
-    printf("total containers: %d payloads: %d\n", containers, payloads);
+    printf("containers:\t%d\n", containers);
+    printf("payloads:\t%d\n", payloads);
 
 done:
-    if (fd)
-    {
-        close(fd);
-    }
     if (buf)
     {
         free(buf);

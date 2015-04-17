@@ -27,26 +27,10 @@
 #include <pb_decode.h>
 #include "src/nmsg.pb.h"
 
-#define NMSG_MAGIC {'N', 'M', 'S', 'G'}
-static const char magic[] = NMSG_MAGIC;
+#include "common.h"
 
-/* NMSG container is zlib compressed. */
-#define NMSG_FLAG_ZLIB      0x01
-/* NMSG container is fragmented. */
-#define NMSG_FLAG_FRAGMENT  0x02
-
-#define load_net16(buf, out)                        \
-    do                                              \
-    {                                               \
-        uint16_t _my_16;                            \
-        memcpy(&_my_16, buf, sizeof(uint16_t));     \
-        _my_16 = ntohs(_my_16);                     \
-        *(out) = _my_16;                            \
-    }                                               \
-    while (0)
-
-uint32_t payloads = 0;
-uint32_t payloads_total = 0;
+static uint32_t payloads = 0;
+static uint32_t payloads_total = 0;
 
 bool count_payload_callback(pb_istream_t *stream, const pb_field_t *field,
         void **arg)
@@ -64,14 +48,9 @@ bool count_payload_callback(pb_istream_t *stream, const pb_field_t *field,
 
 int main(int argc, char **argv)
 {
-    int fd, n;
-    uint16_t vf;
+    ssize_t n;
+    uint8_t *buf = NULL;
     uint32_t processed, containers;
-    uint8_t *p = NULL, *buf = NULL;
-    struct stat stat_buf;
-    nmsg_Nmsg message;
-    bool status;
-    pb_istream_t stream;
 
     if (argc != 2)
     {
@@ -81,68 +60,42 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-    fd = open(argv[1], O_RDONLY);
-    if (fd == -1)
-    {
-        fprintf(stderr, "can't open %s\n", argv[1]);
-        goto done;
-    }
-    if (fstat(fd, &stat_buf) == -1)
-    {
-        fprintf(stderr, "can't stat %s\n", argv[1]);
-        goto done;
-    }
-    buf = malloc(stat_buf.st_size);
+    buf = load_container(argv[1], &n);
     if (buf == NULL)
     {
-        fprintf(stderr, "can't malloc\n");
-        goto done;
-    }
-    n = read(fd, buf, stat_buf.st_size);
-    if (n != stat_buf.st_size)
-    {
-        fprintf(stderr, "can't read %s\n", argv[1]);
         goto done;
     }
 
     /* loop through file, processing as many containers as we find */
     for (containers = payloads = processed = 0; processed < n; )
     {
+        bool status;
+        uint16_t vf;
         uint32_t p_len;
+        uint8_t *p = NULL;
+        pb_istream_t stream;
+        nmsg_Nmsg message = {};
 
         p = buf + processed;
 
         /* confirm NMSG header */
-        if (memcmp(p, magic, sizeof (magic)) != 0)
-        {
-            fprintf(stderr, "NMSG header verification failed\n");
-            goto done;
-        }
+        CHECK_MAGIC(p);
         p += 4;
 
         /* confirm NMSG protocol version */
-        load_net16(p, &vf);
-        if ((vf & 0xFF) != 2U)
-        {
-            fprintf(stderr, "NMSG version check failed\n");
-            goto done;
-        }
+        CHECK_VERSION(p);
 
         /* we don't process compressed or fragmened payloads */
-        if (vf >> 8 & NMSG_FLAG_ZLIB)
-        {
-            printf("NMSG container contains compressed payloads\n");
-            goto done;
-        }
-        if (vf >> 8 & NMSG_FLAG_FRAGMENT)
-        {
-            printf("NMSG container contains fragmented payloads\n");
-            goto done;
-        }
+        CHECK_ZLIB(vf);
+
+        /* we don't process compressed or fragmened payloads */
+        CHECK_FRAG(vf);
+
         p += 2;
 
-        /* get container length */
-        p_len = ntohl(*((uint32_t* )(p)));
+        /* get container size */
+        GET_CONTAINER_SIZE(p, p_len);
+
         p += 4;
 
         stream = pb_istream_from_buffer(p, p_len);
@@ -159,14 +112,10 @@ int main(int argc, char **argv)
         payloads_total += payloads;
         payloads = 0;
     }
-    printf("total containers: %d total payloads: %d\n", containers,
-            payloads_total);
+    printf("containers:\t%d\n", containers);
+    printf("payloads:\t%d\n", payloads_total);
 
 done:
-    if (fd)
-    {
-        close(fd);
-    }
     if (buf)
     {
         free(buf);
