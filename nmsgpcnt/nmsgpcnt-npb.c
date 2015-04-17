@@ -111,11 +111,13 @@ int main(int argc, char **argv)
             break;
         }
 
+        /* step over version/flags */
         p += 2;
 
         /* get container length */
         c_len = ntohl(*((uint32_t* )(p)));
 
+        /* step over length */
         p += 4;
 
         stream = pb_istream_from_buffer(p, c_len);
