@@ -167,7 +167,7 @@ int main(int argc, char **argv)
         p += 4;
 
         /* confirm NMSG protocol version */
-        CHECK_VERSION(p);
+        CHECK_VERSION(p, vers_flags);
 
         /* we don't process compressed or fragmened payloads */
         CHECK_ZLIB(vf);

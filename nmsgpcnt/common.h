@@ -54,7 +54,7 @@ static const char magic[] = NMSG_MAGIC;
     }
 
 /* confirm NMSG protocol version */
-#define CHECK_VERSION(p)                                        \
+#define CHECK_VERSION(p, vf)                                    \
     load_net16(p, &vf);                                         \
     if ((vf & 0xFF) != 2U)                                      \
     {                                                           \
