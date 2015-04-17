@@ -58,7 +58,7 @@ struct nmsg_pb_data
 typedef struct nmsg_pb_data nmsg_pb_data_t;
 
 int
-decode_pb(const uint8_t *pb_data, uint32_t p_len, nmsg_pb_data_t *nmsg_data)
+decode_pb(const uint8_t *pb_data, uint32_t len, nmsg_pb_data_t *nmsg_data)
 {
     int idx;
     uint8_t wire_type;
@@ -69,7 +69,7 @@ decode_pb(const uint8_t *pb_data, uint32_t p_len, nmsg_pb_data_t *nmsg_data)
 
     i = 0;
     idx = 0;
-    while (i < p_len)
+    while (i < len)
     {
         /*
          *  Each key in the streamed message is a varint with the value 
@@ -202,14 +202,13 @@ int main(int argc, char **argv)
         p += 4;
 
         /* deserialize the protobuf encoded container */
-        ret = decode_pb(p, p_len, &nmsg_data);
-        if (ret < 0)
+        if (decode_pb(p, c_len, &nmsg_data) < 0)
         {
             fprintf(stderr, "error: can't parse NMSG payload\n");
             goto done;
         }
         containers++;
-        processed += p_len + 10;
+        processed += c_len + 10;
         payloads += nmsg_data.n_payloads;
     }
     printf("containers:\t%d\n", containers);

@@ -98,14 +98,14 @@ int main(int argc, char **argv)
 
         p += 4;
 
-        message = nmsg__nmsg__unpack(0, p_len, p);
+        message = nmsg__nmsg__unpack(0, c_len, p);
         if (message == NULL)
         {
             fprintf(stderr, "nmsg__nmsg__unpack() error");
             goto done;
         }
         containers++;
-        processed += p_len + 10;
+        processed += c_len + 10;
         payloads += message->n_payloads;
         nmsg__nmsg__free_unpacked(message, 0);
     }

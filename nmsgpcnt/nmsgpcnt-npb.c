@@ -118,7 +118,7 @@ int main(int argc, char **argv)
 
         p += 4;
 
-        stream = pb_istream_from_buffer(p, p_len);
+        stream = pb_istream_from_buffer(p, c_len);
 
         message.payloads.funcs.decode = &count_payload_callback;
         status = pb_decode(&stream, nmsg_Nmsg_fields, &message);
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
             goto done;
         }
         containers++;
-        processed += p_len + 10;
+        processed += c_len + 10;
         payloads_total += payloads;
         payloads = 0;
     }
