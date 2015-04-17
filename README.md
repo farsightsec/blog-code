@@ -25,8 +25,8 @@ DNS traffic out of a passive DNS stream. Originally published in
 
 ## [nmsgpcnt](nmsgpcnt)
 An example of how manually deserialize an
-[`nmsg`](https://github.com/farsightsec/nmsg) [Google Protocol Buffer](https://developers.google.com/protocol-buffers/) message using the C programming
+[`NMSG`](https://github.com/farsightsec/nmsg) [Google Protocol Buffer](https://developers.google.com/protocol-buffers/) message using the C programming
 language. It reads NMSGs from a file and counts the number of containers and
 payloads. Two other examples are presented ([`protoc-c`](https://github.com/protobuf-c/protobuf-c) and [`Nanopb`](http://koti.kapsi.fi/jpa/nanopb/) to help with
 performance benchmarking. Originally published in
-[Google Protocol Buffer Deserialization The Hard Way](https://www.farsightsecurity.com/Blog/20150325-mschiffm-nmsg-pb/).
+[Google Protocol Buffer Deserialization The Hard Way](https://www.farsightsecurity.com/Blog/20150417-mschiffm-nmsg-protobuf-deserialize/).
