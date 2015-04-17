@@ -148,7 +148,7 @@ int main(int argc, char **argv)
     buf = load_container(argv[1], &n);
     if (buf == NULL)
     {
-        goto done;
+        return EXIT_FAILURE;
     }
 
     /* loop through file, processing as many containers as we find */
@@ -205,7 +205,7 @@ int main(int argc, char **argv)
         if (decode_pb(p, c_len, &nmsg_data) < 0)
         {
             fprintf(stderr, "error: can't parse NMSG payload\n");
-            goto done;
+            break;
         }
         containers++;
         processed += c_len + 10;
@@ -214,7 +214,6 @@ int main(int argc, char **argv)
     printf("containers:\t%d\n", containers);
     printf("payloads:\t%d\n", payloads);
 
-done:
     if (buf)
     {
         free(buf);

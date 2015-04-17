@@ -63,7 +63,7 @@ int main(int argc, char **argv)
     buf = load_container(argv[1], &n);
     if (buf == NULL)
     {
-        goto done;
+        return EXIT_FAILURE;
     }
 
     /* loop through file, processing as many containers as we find */

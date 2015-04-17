@@ -45,7 +45,7 @@ int main(int argc, char **argv)
     buf = load_container(argv[1], &n);
     if (buf == NULL)
     {
-        goto done;
+        return EXIT_FAILURE;
     }
 
     /* loop through file, processing as many containers as we find */
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
         if (message == NULL)
         {
             fprintf(stderr, "nmsg__nmsg__unpack() error");
-            goto done;
+            break;
         }
         containers++;
         processed += c_len + 10;
@@ -112,7 +112,6 @@ int main(int argc, char **argv)
     printf("containers:\t%d\n", containers);
     printf("payloads:\t%d\n", payloads);
 
-done:
     if (buf)
     {
         free(buf);
