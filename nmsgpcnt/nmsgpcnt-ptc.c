@@ -51,7 +51,7 @@ int main(int argc, char **argv)
     /* loop through file, processing as many containers as we find */
     for (containers = payloads = processed = 0; processed < n; )
     {
-        uint16_t vf;
+        uint16_t vers_flags;
         uint32_t p_len;
         uint8_t *p = NULL;
         Nmsg__Nmsg *message;
@@ -66,10 +66,10 @@ int main(int argc, char **argv)
         CHECK_VERSION(p, vers_flags);
 
         /* we don't process compressed or fragmened payloads */
-        CHECK_ZLIB(vf);
+        CHECK_ZLIB(vers_flags);
 
         /* we don't process compressed or fragmened payloads */
-        CHECK_FRAG(vf);
+        CHECK_FRAG(vers_flags);
 
         p += 2;
 

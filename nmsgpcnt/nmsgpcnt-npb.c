@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     for (containers = payloads = processed = 0; processed < n; )
     {
         bool status;
-        uint16_t vf;
+        uint16_t vers_flags;
         uint32_t p_len;
         uint8_t *p = NULL;
         pb_istream_t stream;
@@ -86,10 +86,10 @@ int main(int argc, char **argv)
         CHECK_VERSION(p, vers_flags);
 
         /* we don't process compressed or fragmened payloads */
-        CHECK_ZLIB(vf);
+        CHECK_ZLIB(vers_flags);
 
         /* we don't process compressed or fragmened payloads */
-        CHECK_FRAG(vf);
+        CHECK_FRAG(vers_flags);
 
         p += 2;
 
