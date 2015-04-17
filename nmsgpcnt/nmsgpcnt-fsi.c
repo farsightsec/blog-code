@@ -119,7 +119,8 @@ decode_pb(const uint8_t *pb_data, uint32_t p_len, nmsg_pb_data_t *nmsg_data)
                 i++;
                 break;
             case PB_WT_32:
-                i += 4;
+                /* next byte has the 32-bit value; skip both */
+                i += 5;
                 break;
             default:
                 /* unknown wire type */
