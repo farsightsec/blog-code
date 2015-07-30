@@ -30,3 +30,9 @@ language. It reads NMSGs from a file and counts the number of containers and
 payloads. Two other examples are presented ([`protoc-c`](https://github.com/protobuf-c/protobuf-c) and [`Nanopb`](http://koti.kapsi.fi/jpa/nanopb/) to help with
 performance benchmarking. Originally published in
 [Google Protocol Buffer Deserialization The Hard Way](https://www.farsightsecurity.com/Blog/20150417-mschiffm-nmsg-protobuf-deserialize/).
+
+## [sratesttool](sratesttool)
+Hello World, AXA-style. Introductory example of how to use the `libaxa` C API.
+`sratesttool` connects to an SRA server, sets a watch, enables a
+channel and streams watch hits to the console. Originally published in
+[Farsight's Advanced Exchange Access: The C Programming API, Part One](https://www.farsightsecurity.com/Blog/20150730-mschiffm-axa-api-c-1/).
