@@ -202,17 +202,13 @@ srvr_connect(void)
             break;
         /* non-blocking connection waiting for TCP SYN/ACK or TLS handshake */
         case AXA_CONNECT_INCOM:
-            AXA_FAIL("impossible result from axa_client_open");
+            AXA_FAIL("impossible result from axa_client_open()");
         /* connect is complete (incl xmit of AXA_P_OP_NOP) */
         case AXA_CONNECT_NOP:
             break;
         /* connect is complete (incl xmit of AXA_P_OP_USER) */
         case AXA_CONNECT_USER:
-            if (!srvr_wait_resp(AXA_P_OP_OK, AXA_P_OP_USER))
-            {
-                return (false);
-            }
-            break;
+            AXA_FAIL("unexpected response from axa_client_open()");
     }
 
     /* block any watch hits until we are ready */
@@ -278,8 +274,6 @@ srvr_connect(void)
     }
     axa_trace_msg("channel enabled OK\n");
 
-    /* Reset connection back-off after last watch has been accepted. */
-    axa_client_backoff_reset(&client);
     return (true);
 }
 
