@@ -36,3 +36,8 @@ Hello World, AXA-style. Introductory example of how to use the `libaxa` C API.
 `sratesttool` connects to an SRA server, sets a watch, enables a
 channel and streams watch hits to the console. Originally published in
 [Farsight's Advanced Exchange Access: The C Programming API, Part One](https://www.farsightsecurity.com/Blog/20150730-mschiffm-axa-api-c-1/).
+
+## [nmsgjsonseqsrc](nmsgjsonseqsrc)
+A simple example of how to use the
+[`nmsg`](https://github.com/farsightsec/nmsg) IO engine, callback interface, and seqsrc container tracking feature set. Originally published in
+[Farsight Security's Network Message: Loss Tracking Explained](https://www.farsightsecurity.com/Blog/20170317-schiffman-nmsgjsonseqsrc/).
