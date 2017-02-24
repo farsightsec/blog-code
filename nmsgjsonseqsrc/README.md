@@ -4,7 +4,7 @@ A simple example of how to use the
 and seqsrc container tracking feature set. It listens for NMSGs on the network
 and emits them as newline delimited JSON blobs. When the user quits via
 ctrl-c, nmsgjsonseqsrc prints the number of containers received / dropped.
-Originally published in [Farsight Security's Network Message: Loss Tracking Explained](https://www.farsightsecurity.com/Blog/20170317-schiffman-nmsgjsonseqsrc/).
+Originally published in [Farsight Security's Network Message: Loss Tracking Explained](https://www.farsightsecurity.com/2017/02/24/mschiffm-nmsg-seqsrc/).
 
 ## nmsgjsonseqsrc example
 To wit (after starting nmsgjsonseqsrc, run something like "nmsgtool -r foo.nmsg -s 127.0.0.1,8888" in another window):

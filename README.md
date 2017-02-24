@@ -40,4 +40,4 @@ channel and streams watch hits to the console. Originally published in
 ## [nmsgjsonseqsrc](nmsgjsonseqsrc)
 A simple example of how to use the
 [`nmsg`](https://github.com/farsightsec/nmsg) IO engine, callback interface, and seqsrc container tracking feature set. Originally published in
-[Farsight Security's Network Message: Loss Tracking Explained](https://www.farsightsecurity.com/Blog/20170317-schiffman-nmsgjsonseqsrc/).
+[Farsight Security's Network Message: Loss Tracking Explained](https://www.farsightsecurity.com/2017/02/24/mschiffm-nmsg-seqsrc/).
