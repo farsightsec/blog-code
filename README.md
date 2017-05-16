@@ -1,11 +1,30 @@
 # blog-code
 The code published in [Farsight Security Blog](https://www.farsightsecurity.com/Blog) articles is made available here for easy download.
 
+## [dnsqr_filter](dnsqr_filter)
+A reusable example of an [`nmsg`](https://github.com/farsightsec/nmsg) filter
+using [`wdns`](https://github.com/farsightsec/wdns) to filter interesting
+DNS traffic out of a passive DNS stream. Originally published in
+[Processing Passive DNS With the nmsg C API](https://www.farsightsecurity.com/Blog/20150318-cmikk-processing-pdns/).
+
+## [nmsgjsonseqsrc](nmsgjsonseqsrc)
+A simple example of how to use the
+[`nmsg`](https://github.com/farsightsec/nmsg) IO engine, callback interface, and seqsrc container tracking feature set. Originally published in
+[Farsight Security's Network Message: Loss Tracking Explained](https://www.farsightsecurity.com/2017/02/24/mschiffm-nmsg-seqsrc/).
+
 ## [nmsgpacket](nmsgpacket)
 A simple example of how to use the [`nmsg`](https://github.com/farsightsec/nmsg)
 API. It reads packets from a network interface, converts them to NMSG, and
 mirrors the payloads to a binary file and to stdout. Originally published in
 [Farsight Security's Network Message, Volume 4: The C Programming API](https://www.farsightsecurity.com/Blog/20150218-mschiffm-nmsg-api-c/).
+
+## [nmsgpcnt](nmsgpcnt)
+An example of how manually deserialize an
+[`NMSG`](https://github.com/farsightsec/nmsg) [Google Protocol Buffer](https://developers.google.com/protocol-buffers/) message using the C programming
+language. It reads NMSGs from a file and counts the number of containers and
+payloads. Two other examples are presented ([`protoc-c`](https://github.com/protobuf-c/protobuf-c) and [`Nanopb`](http://koti.kapsi.fi/jpa/nanopb/) to help with
+performance benchmarking. Originally published in
+[Google Protocol Buffer Deserialization The Hard Way](https://www.farsightsecurity.com/Blog/20150417-mschiffm-nmsg-protobuf-deserialize/).
 
 ## [pynmsgpacket](pynmsgpacket)
 A simple example of how to use the
@@ -17,27 +36,13 @@ encoded NMSGs and send to them to a network socket. It was originally published
 in
 [Farsight Security's Network Message, Volume 5: The Python Programming API](https://www.farsightsecurity.com/Blog/20150225-mschiffm-nmsg-api-python/).
 
-## [dnsqr_filter](dnsqr_filter)
-A reusable example of an [`nmsg`](https://github.com/farsightsec/nmsg) filter
-using [`wdns`](https://github.com/farsightsec/wdns) to filter interesting
-DNS traffic out of a passive DNS stream. Originally published in
-[Processing Passive DNS With the nmsg C API](https://www.farsightsecurity.com/Blog/20150318-cmikk-processing-pdns/).
-
-## [nmsgpcnt](nmsgpcnt)
-An example of how manually deserialize an
-[`NMSG`](https://github.com/farsightsec/nmsg) [Google Protocol Buffer](https://developers.google.com/protocol-buffers/) message using the C programming
-language. It reads NMSGs from a file and counts the number of containers and
-payloads. Two other examples are presented ([`protoc-c`](https://github.com/protobuf-c/protobuf-c) and [`Nanopb`](http://koti.kapsi.fi/jpa/nanopb/) to help with
-performance benchmarking. Originally published in
-[Google Protocol Buffer Deserialization The Hard Way](https://www.farsightsecurity.com/Blog/20150417-mschiffm-nmsg-protobuf-deserialize/).
+## [scaladnsdb](scaladnsdb)
+An example of how to build a demo GUI front end for our DNSDB API in Scala. It was
+originally published in
+[Building a Demo GUI Front End For DNSDB API In Scala With Swing For The Mac and For Windows PCs](https://www.farsightsecurity.com/2017/05/16/stsauver-dnsdb-scala-gui/).
 
 ## [sratesttool](sratesttool)
 Hello World, AXA-style. Introductory example of how to use the `libaxa` C API.
 `sratesttool` connects to an SRA server, sets a watch, enables a
 channel and streams watch hits to the console. Originally published in
 [Farsight's Advanced Exchange Access: The C Programming API, Part One](https://www.farsightsecurity.com/Blog/20150730-mschiffm-axa-api-c-1/).
-
-## [nmsgjsonseqsrc](nmsgjsonseqsrc)
-A simple example of how to use the
-[`nmsg`](https://github.com/farsightsec/nmsg) IO engine, callback interface, and seqsrc container tracking feature set. Originally published in
-[Farsight Security's Network Message: Loss Tracking Explained](https://www.farsightsecurity.com/2017/02/24/mschiffm-nmsg-seqsrc/).
