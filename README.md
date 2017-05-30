@@ -41,6 +41,10 @@ An example of how to build a demo GUI front end for our DNSDB API in Scala. It w
 originally published in
 [Building a Demo GUI Front End For DNSDB API In Scala With Swing For The Mac and For Windows PCs](https://www.farsightsecurity.com/2017/05/16/stsauver-dnsdb-scala-gui/).
 
+## [scaladnsdb2](scaladnsdb2)
+An example of how to build a GUI front end for our DNSDB API to perform ASN queries in Scala. It was originally published in
+[Automatically Going From An Autonomous System Number (ASN), To The Prefixes It Announces, To The Domain Names Seen Using Those IPs: Another Farsight DNSDB API Demo Application and Whitepaper](https://www.farsightsecurity.com/2017/05/30/stsauver-dnsdb-scala-gui-2/).
+
 ## [sratesttool](sratesttool)
 Hello World, AXA-style. Introductory example of how to use the `libaxa` C API.
 `sratesttool` connects to an SRA server, sets a watch, enables a
