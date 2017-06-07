@@ -7,6 +7,10 @@ using [`wdns`](https://github.com/farsightsec/wdns) to filter interesting
 DNS traffic out of a passive DNS stream. Originally published in
 [Processing Passive DNS With the nmsg C API](https://www.farsightsecurity.com/Blog/20150318-cmikk-processing-pdns/).
 
+## [ipv4map](ipv4map)
+A set of golang tools for collecting and mapping IPv4 addresses. Originally
+published in [Visualizing the incidence of IPv4 addresses in Farsight's DNSDB](https://www.farsightsecurity.com/2017/06/07/bapril-ip-mapping).
+
 ## [nmsgjsonseqsrc](nmsgjsonseqsrc)
 A simple example of how to use the
 [`nmsg`](https://github.com/farsightsec/nmsg) IO engine, callback interface, and seqsrc container tracking feature set. Originally published in
