@@ -49,6 +49,10 @@ originally published in
 An example of how to build a GUI front end for our DNSDB API to perform ASN queries in Scala. It was originally published in
 [Automatically Going From An Autonomous System Number (ASN), To The Prefixes It Announces, To The Domain Names Seen Using Those IPs: Another Farsight DNSDB API Demo Application and Whitepaper](https://www.farsightsecurity.com/2017/05/31/stsauver-dnsdb-scala-gui-2/).
 
+## [scaladnsdb3](scaladnsdb3)
+An update to ASN-to-prefixes-to-domains article, showing use of `stat.ripe.net` as an alternative to `bgpview.io`. It was originally published in
+[ASN-To-Prefixes-To-Domain Names -- Update to May 2017 Blog Article](https://www.farsightsecurity.com/2018/09/04/stsauver-ASN/).
+
 ## [sratesttool](sratesttool)
 Hello World, AXA-style. Introductory example of how to use the `libaxa` C API.
 `sratesttool` connects to an SRA server, sets a watch, enables a
