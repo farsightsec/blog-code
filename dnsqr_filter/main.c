@@ -49,7 +49,7 @@ void err_nmsg_res(int eval, nmsg_res res, const char *fmt, ...) {
 	va_list ap;
 	va_start(ap, fmt);
 	vfprintf(stderr, fmt, ap);
-	fprintf(stderr, ": %s", nmsg_res_lookup(res));
+	fprintf(stderr, ": %s\n", nmsg_res_lookup(res));
 	exit(eval);
 }
 
@@ -125,13 +125,13 @@ main(int argc, char **argv) {
 
 			res = nmsg_io_add_input(io, input, NULL);
 			if (res != nmsg_res_success)
-				err_nmsg_res(EXIT_FAILURE, res, "[-r %s] nmsg_io_add_input() failed");
+				err_nmsg_res(EXIT_FAILURE, res, "[-r %s] nmsg_io_add_input() failed", optarg);
 			break;
 
 		case 'C':
 			res = nmsg_io_add_input_channel(io, optarg, NULL);
 			if (res != nmsg_res_success)
-				err_nmsg_res(EXIT_FAILURE, res, "[-C %s] nmsg_io_add_input_channel(%s) failed", optarg);
+				err_nmsg_res(EXIT_FAILURE, res, "[-C %s] nmsg_io_add_input_channel() failed", optarg);
 
 			break;
 		case 'l':
