@@ -54,8 +54,10 @@ An update to ASN-to-prefixes-to-domains article, showing use of `stat.ripe.net` 
 [ASN-To-Prefixes-To-Domain Names -- Update to May 2017 Blog Article](https://www.farsightsecurity.com/2018/09/04/stsauver-ASN/).
 
 ## [sie_get](sie_get)
-Simple SIE Batch command line client in C illustrating use of the SIE Batch
-API.
+Simple SIE Batch command line client in C illustrating use of the SIE Batch API (from the March 2020 blog).
+
+## [sie_get_clients](sie_get_clients)
+Code from the "Working With The SIE Batch API: A Command Line Client In Ruby, Perl, Python and C" whitepaper.
 
 ## [sratesttool](sratesttool)
 Hello World, AXA-style. Introductory example of how to use the `libaxa` C API.
