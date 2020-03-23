@@ -53,6 +53,10 @@ An example of how to build a GUI front end for our DNSDB API to perform ASN quer
 An update to ASN-to-prefixes-to-domains article, showing use of `stat.ripe.net` as an alternative to `bgpview.io`. It was originally published in
 [ASN-To-Prefixes-To-Domain Names -- Update to May 2017 Blog Article](https://www.farsightsecurity.com/2018/09/04/stsauver-ASN/).
 
+## [sie_get](sie_get)
+Simple SIE Batch command line client in C illustrating use of the SIE Batch
+API.
+
 ## [sratesttool](sratesttool)
 Hello World, AXA-style. Introductory example of how to use the `libaxa` C API.
 `sratesttool` connects to an SRA server, sets a watch, enables a
