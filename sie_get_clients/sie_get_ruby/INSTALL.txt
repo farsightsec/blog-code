@@ -1,0 +1,43 @@
+1) Put your SIE-Batch API key into ~/.sie-get-key.txt and make sure
+   it isn't readable by others:
+
+   chmod u=r,go-rwx ~/.sie-get-key.txt
+
+2) Install Ruby and any required Ruby gems (what you actually need to
+   install will depend on whether you already routinely use Ruby).
+   On the Mac, for example:
+
+   brew install ruby
+   sudo gem install typhoeus
+
+3) We assume that the host IP you're using to access SIE Batch has been
+   explicitly whitelisted by Farsight.
+
+   IF NOT, you'll need to enable proxy support in the client, then
+   create an ssh tunnel to a bastion host that has access
+
+   To enable proxy support in the client, note the line in the ruby source:
+
+        useproxy = false
+
+   Assuming the bastion host is called bastionhost.example.com :
+
+        ssh -D 127.0.0.1:1080 bastionhost.example.com
+
+4) Install the Ruby script to a directory in your path and make it
+   executable:
+
+   sudo cp sie_get_rb.rb /usr/local/bin/sie_get_rb
+   sudo chmod a+rx /usr/local/bin/sie_get_rb
+
+5) Try the client:
+
+   sie_get_rb             <-- see usage summary
+   sie_get_rb checkkey    <-- verify key
+   sie_get_rb channels    <-- get list of channels
+   sie_get_rb 212         <-- details for a channel
+
+   sie_get_rb 212 now 5   <-- grab 5 minutes of ch212
+   sie_get_rb 212 "2020-01-28 19:17:00" "2020-01-28 19:22:00"
+
+Feedback? Please email stsauver@fsi.io
