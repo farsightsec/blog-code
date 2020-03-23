@@ -1,0 +1,204 @@
+.TH sie_get 1
+.SH NAME
+sie_get \- Example program to download data from SIE channels via the SIE-Batch API
+.SH SYNOPSIS
+.SS Command Invocation Options
+Two command invocations options are available:
+
+\(em
+.B sie_get
+.I channelNumber startDatetime endDatetime
+.br
+\(em
+.B sie_get
+.I channelNumber
+.B now
+.I minutesBack
+.SS Arguments
+.I channelNumber
+should be a raw channel number, eg., 
+.B 212
+
+.I datetime values
+(e.g.,
+.I startDatetime 
+and 
+.I endDatetime 
+) should be 19-character-long (YYYY-MM-DD hh:mm:ss) UTC datetime stamps 
+enclosed in double quote marks.  For example,  
+.B \(dq2020-01-14 10:22:14\(dq
+.SH DESCRIPTION
+.SS Security Information Exchange
+The Security Information Exchange (SIE) is a Farsight Security, Inc. service
+used to share passive DNS and other cybersecurity data with subcribing
+participants. SIE is like having access to a pre-built global cybersecurity 
+sensor network: you get the cybersecurity visibility you want without
+the hassles of having to actually run your own network of sensor nodes.
+.SS Channels
+The real-time data streams available at SIE are organized into numbered 
+"channels." The \(dqSIE Channel Guide\(dq lists publicly-disclosed channels 
+available to approved subscribers, see:
+.P
+\(em
+.UR https://www.farsightsecurity.com/assets/media/download/fsi-sie-channel-guide.pdf 
+https://www.farsightsecurity.com/assets/media/download/fsi-sie-channel-guide.pdf
+.UE
+.SS Traditional \(dqReal-Time\(dq SIE Access Options
+SIE users have historically received broadcast channel traffic in real time 
+either via:
+
+\(em 
+.B a leased blade
+colocated at one of the SIE datacenters, or 
+
+\(em 
+remotely, via an 
+.B encrypted tunnel.
+
+While these methods work, it means that if you want to capture an 
+hour's-worth of traffic from a channel, you either:
+
+\(em
+.B need to be routinely collecting and saving traffic for that channel, or
+
+\(em
+.B need to start collecting, wait while that data is collected from that
+point forward for the specified duration, and then proceed. 
+
+Farsight wanted an alternative for the impatient that would allow data 
+scientists and other users to immediately get the SIE data they wanted 
+with virtually no delay.  SIE-Batch, as described in the next subsection, 
+is the solution to that problem.
+.SS SIE-Batch
+SIE-Batch caches recently-seen data from select SIE channels, 
+thereby allowing users to easily immediately download chunks of data 
+from those channels.
+
+SIE-Batch can be used in two different ways:
+
+\(em Via a 
+.B point-and-click web page, see
+.UR https://siebatch.it.fsi.io/ 
+https://siebatch.it.fsi.io/ 
+.UE
+
+The SIE-Batch web site requires an SIE-Batch API key. Please contact
+Farsight Security Sales at sales@farsightsecurity.com or +1-650-489-7919
+for information about getting an SIE-Batch API key.
+
+\(em In addition to the web interface, 
+.B SIE-Batch also offers an API for use by developers 
+interested in integrating SIE-Batch into their own 
+applications (it requires users to have the same SIE-Batch API key as 
+the web interface). 
+
+The API is documented at
+
+.UR https://siebatch.it.fsi.io/apidoc/
+https://siebatch.it.fsi.io/apidoc/
+.UE
+
+We used that API to create a demo SIE-Batch CLI (command line interface) 
+client \(em that's the subject of this document.
+
+While the SIE-Batch web page is extremely easy to use, as you'd expect, the 
+.B sie_get 
+command line client can be very convenient if you like to work at the Un*x 
+dollar sign prompt, or you want a command that you can easily invoke 
+from cron.
+.SH FILES
+.SS SIE-Batch API key file
+~/.sie-get-key.txt 
+\(em Holds the user's SIE-Batch API key for 
+authentication and access control purposes. Ensure this file is NOT
+world or group readable (anyone with access to this API key
+will have access to your SIE-Batch account): $ chmod go-rwx ~/.sie-get-key.txt
+.SS Output
+Output gets written to the current default directory in files such as
+
+.nf
+\(em sie-ch212-{2020-01-09@19:46:42}-{2020-01-09@20:01:42}.jsonl
+\(em sie-ch208-{2020-01-09@21:39:44}-{2020-01-09@21:44:44}.nmsg
+.fi
+
+The file type is keyed to the content of the file, either JSON Lines or NMSG.
+
+Some operating systems may change how those files are 
+.B represented
+in graphical file browsers. For example, in Finder under Mac OS X 
+Catalina, you'll see the colons in the filenames displayed as slashes 
+(although in reality the underlying filenames are unchanged).
+.SS Processing The Output Files
+SIE-Batch (and applications that rely on its API, such as this one)
+may emit two different kinds of files, JSON Line files and nmsg files.
+(Which you'll get depends on the SIE channel you're using).
+
+.B \(em JSON Lines output files 
+
+JSON Lines format output files can be processed with jq:
+
+.UR https://stedolan.github.io/jq/
+https://stedolan.github.io/jq/
+.UE
+
+For example, to extract a single field of interest, e.g.:
+
+.nf
+.eo
+nmsgtool -r \
+ "sie-ch204-{2020-01-10@08:01:32}-{2020-01-10@08:03:32}.nmsg" \
+  -V SIE -T dnsdedupe -J - | jq -r '.message.rrname'
+.ec
+.fi
+
+You can also use jq with nmsgtool to extract multiple fields, 
+simplifying subsetting. For example, if you wanted to drop all 
+records with RRSIG or NSEC3 rrtypes, and skip all .in-addr.arpa's 
+rrnames, you could use:
+
+.nf
+.eo
+nmsgtool -r \
+ "sie-ch204-{2020-01-10@08:01:32}-{2020-01-10@08:03:32}.nmsg" \
+ -V SIE -T dnsdedupe -J - | jq -r \
+ '"\(.message.rrname) \(.message.rrtype)"' | grep -v " RRSIG" | \
+ grep -v " NSEC3" | grep -v ".in-addr.arpa. "
+.ec
+.fi
+
+.B \(em nmsg format output files
+
+nmsg format output files from SIE-Batch can be read using nmsgtool:
+
+.UR https://github.com/farsightsec/nmsg 
+https://github.com/farsightsec/nmsg 
+.UE
+
+For example, assume we've grabbed two minutes of Ch204, and that 
+output's in:
+
+.nf
+.eo
+sie-ch204-{2020-01-10@08:01:32}-{2020-01-10@08:03:32}.nmsg
+.ec
+.fi
+
+To turn that nmsg data into human-readable presentation format:
+
+.nf
+.eo
+nmsgtool -r \
+ "sie-ch204-{2020-01-10@08:01:32}-{2020-01-10@08:03:32}.nmsg" \
+ -V SIE -T dnsdedupe > somefilename.txt
+.ec
+.fi
+
+Turn that nmsg data into JSON Lines format:
+
+.nf
+.eo
+nmsgtool -r \
+ "sie-ch204-{2020-01-10@08:01:32}-{2020-01-10@08:03:32}.nmsg" \
+ -V SIE -T dnsdedupe -J - > somefilename.jsonl
+.ec
+.fi
