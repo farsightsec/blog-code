@@ -1,0 +1,67 @@
+sie_get_py
+==========
+
+1) Put your SIE-Batch API key into ~/.sie-get-key.txt and make sure
+   it isn't readable by others:
+
+   chmod u=r,go-rwx ~/.sie-get-key.txt
+
+2) You likely already have python3 (in fact, perhaps even multiple copies
+   of python3). The script will use the version that it finds first in your
+   path. However, you can reinstall a new copy should you desire to do so.
+   For example, if you're on a Mac and use Homebrew to manage your packages,
+   say:
+
+   $ brew install python3
+
+3) Install/update the separate modules we need:
+
+   sudo pip3 install datetime
+   sudo pip3 install pathlib
+   sudo pip3 install pycurl
+
+4) We assume that the host IP you're using to access SIE Batch has been
+   explicitly whitelisted by Farsight.
+
+   IF NOT, you'll need to enable proxy support in the client, then
+   create an ssh tunnel to a bastion host that has access
+
+   To enable proxy support in the client, note the line in the Python source:
+
+	useproxy = False    # note: 'false' will not work
+
+   Assuming the bastion host is called bastionhost.example.com :
+
+        ssh -D 127.0.0.1:1080 bastionhost.example.com
+
+5) Install the Python script to a directory in your path and make it
+   executable:
+
+   sudo cp sie_get_py.py /usr/local/bin/sie_get_py
+   sudo chmod a+rx /usr/local/bin/si_get_py
+
+6) Try the client (assuming you have access to ch212; update the specific
+   dates to something from the last day or so)
+
+   sie_get_py             <-- see usage summary
+   sie_get_py checkkey    <-- verify key
+   sie_get_py channels    <-- get list of channels
+   sie_get_py 212         <-- details for a channel
+
+   sie_get_py 212 now 5   <-- grab 5 minutes of ch212
+   sie_get_py 212 "2020-01-28 19:17:00" "2020-01-28 19:22:00"
+
+   Output will be to a file in your current directory. That filename
+   will be something like the following:
+
+   sie-ch212-{2020-01-18@21:22:19}-{2020-01-18@21:32:19}.jsonl
+
+   Breaking that down and ignoring punctuation:
+
+   sie                  Data source
+   ch212                The channel from the source
+   startdatetime        Starting datetime UTC
+   enddatetime          Ending datetime UTC
+   filetype             jsonl or nmsg depending on content
+
+7) Feedback? Please email stsauver@fsi.io
