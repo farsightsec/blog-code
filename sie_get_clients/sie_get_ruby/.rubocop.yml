@@ -1,0 +1,75 @@
+# get current or go home
+AllCops:
+  TargetRubyVersion: 2.6
+
+Layout/ArgumentAlignment:
+  Enabled: false
+
+Layout/ArrayAlignment:
+  Enabled: false
+
+Layout/MultilineOperationIndentation:
+  Enabled: false
+
+Layout/ParameterAlignment:
+  Enabled: false
+
+Lint/AssignmentInCondition:
+  AllowSafeAssignment: false
+
+Lint/ImplicitStringConcatenation:
+  Enabled: false
+
+# http://wiki.c2.com/?AbcMetric
+Metrics/AbcSize:
+  Max: 30
+
+Metrics/CyclomaticComplexity:
+  Max: 7
+
+Metrics/MethodLength:
+  Max: 45
+
+Metrics/PerceivedComplexity:
+  Max: 9
+
+Naming/VariableName:
+  Enabled: false
+
+Naming/MethodParameterName:
+  Enabled: false
+
+Style/ConditionalAssignment:
+  Enabled: false
+
+Style/FormatStringToken:
+  Enabled: false
+
+# We prefer to have the interpreter on the first line
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# We use a few intentionally, e.g., for $ENDPOINT and $USEPROXY
+Style/GlobalVars:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/ParenthesesAroundCondition:
+  AllowSafeAssignment: false
+
+Style/RedundantReturn:
+  Enabled: false
+
+Style/StringLiterals:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: true
+
+Style/WordArray:
+  EnforcedStyle: brackets
