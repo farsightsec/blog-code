@@ -13,7 +13,7 @@ require 'set'
 #
 #    $ ssh -D 127.0.0.1:1080 bastionhostname
 
-useproxy = true
+useproxy = false
 endpoint = 'batch.sie-remote.net'
 
 # FUNCTIONS
