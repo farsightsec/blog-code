@@ -64,3 +64,7 @@ Hello World, AXA-style. Introductory example of how to use the `libaxa` C API.
 `sratesttool` connects to an SRA server, sets a watch, enables a
 channel and streams watch hits to the console. Originally published in
 [Farsight's Advanced Exchange Access: The C Programming API, Part One](https://www.farsightsecurity.com/Blog/20150730-mschiffm-axa-api-c-1/).
+
+## [bang_question](bang_question)
+Sometimes you'll be rolling along when "BANG!" -- something flys in from left field and hits a system. The natural reaction is to ask, "What was THAT?"
+This application's name seems to perfectly capture that "!?" paradigm. This is a demonstration 9 tab Python3 GUI application leveraging Tkinter. 
