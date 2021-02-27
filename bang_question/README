@@ -1,0 +1,94 @@
+INSTALLATION
+------------
+
+(1) Unpack the bang_question.tar.gz compressed tar file you've downloaded:
+
+   $ tar xfvz bang_question.tar.gz
+
+(2) cd into the bang_question directory  created by the previous step:
+
+   $ cd bang_question
+
+(3) Install required prerequisite Python3 libraries with pip3:
+
+   $ /usr/local/bin/pip3 install --user .
+
+   Note the trailing space and dot on that command!
+
+(4) Install Chromium:
+
+   $ pyppeteer-install
+
+(5) Make a directory called ~/.bang_question_files
+
+   $ mkdir ~/.bang_question_files
+
+   Note the dot before bang!
+
+(6) Copy exclamationquestion.gif to the ~/.bang_question_files/ directory:
+
+   $ cp exclamationquestion.gif ~/.bang_question_files/
+
+(7) Using wget (or a web browser of your choice) download and save a copy 
+of https://whois.arin.net/xsl/website.xsl 
+
+   $ wget "https://whois.arin.net/xsl/website.xsl"
+
+Copy that file to the ~/.bang_question_files/ directory:
+
+    $ cp website.xsl ~/.bang_questions/
+
+(8) (a) Download a recent Routing Information Base file from Oregon Routeviews:
+
+   $ pyasn_util_download.py --latest
+
+That will download a file such as rib.20210104.2200.bz2
+
+(b) Convert that file to the "ipasn_db_file" file we actually need with:
+
+    $ pyasn_util_convert.py --single rib.20210104.2200.bz2 my_ip2asn_db_file
+
+Obviously, substitute the name of the actual RIB file you downloaded for the 
+value shown here.
+
+(c) Move my_ip2asn_db_file to ~/.bang_question_files/
+
+   $ mv my_ip2asn_db_file ~/.bang_question_files/
+
+(9) (a) Sign up for a free IP2location account at https://lite.ip2location.com/
+
+(b) Download and unzip a copy of DB9LITEBINIPV6 (note that this is the 
+*binary* IPv4 *AND* IPv6 format database, notwithstanding the name!) 
+from https://lite.ip2location.com/ 
+
+(c)  Move the downloaded and unzipped file IP2LOCATION-LITE-DB9.IPV6.BIN to 
+the ~/.bang_question_files 
+
+     $ mv IP2LOCATION-LITE-DB9.IPV6.BIN ~/.bang_question_files
+
+NOTE: this file may unpack into 
+IP2LOCATION-LITE-DB9.IPV6.BIN/IP2LOCATION-LITE-DB9.IPV6.BIN -- you only
+want to move the FILE, NOT the file AND the directory by the same name, 
+to the new target location!
+
+(10) While in the subdirectory with the bang_question.py file, create 
+an alias pointing at bang_question.py:
+
+   $ alias bang_question=`pwd`/bang_question.py
+
+You can then simply say:
+
+   $ bang_question
+
+to run the application. If you just type:
+
+   $ alias
+
+you'll see the alias for bang_question. For example:
+
+   $ alias
+   alias bang_question='/Users/joe/bang_question/bang_question.py'
+
+You may want to add the value you see for your bang_question installation 
+to your ~/.bash_profile (or similar startup file) to make that alias persistent.
+
