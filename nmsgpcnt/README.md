@@ -3,7 +3,7 @@ This is `nmsgpcnt`. It contains code that counts NMSG protobuf payloads. It is
 intended as an example of how to write C code to manually deserialize an NMSG
 Google Protocol Buffer encoded container. It reads input from a binary NMSG
 file and counts the number of NMSG containers and payloads. Originally
-published in [Google Protocol Buffer Deserialization The Hard Way](https://www.farsightsecurity.com/Blog/20150417-mschiffm-nmsg-protobuf-deserialize/).
+published in [Google Protocol Buffer Deserialization The Hard Way](https://www.domaintools.com/resources/blog/google-protocol-buffer-deserialization-the-hard-way/).
 
 In addition to the primary `nmsgpcnt-fsi` program, two other reference
 implementations of `nmsgpcnt` are included. One built using the

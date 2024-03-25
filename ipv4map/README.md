@@ -4,7 +4,7 @@ uses a data-file that assigns each IPv4 address to a bit-map. Output can be
 generated as a IP per line list that can be feed to tools like
 [ipv4-heatmap](https://github.com/hrbrmstr/ipv4-heatmap).
 
-Originally published in [Visualizing the incidence of IPv4 addresses in Farsight's DNSDB](https://www.farsightsecurity.com/2017/06/07/bapril-ip-mapping)..
+Originally published in [Visualizing the incidence of IPv4 addresses in Farsight's DNSDB](https://www.domaintools.com/resources/blog/visualizing-the-incidence-of-ipv4-addresses-in-farsights-dnsdb/).
 
 ## Installation
   1. Clone the git repo: `git clone https://github.com/farsightsec/blog-code/tree/master/ipv4map`

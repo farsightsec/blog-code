@@ -1,7 +1,7 @@
 # nmsgpacket
 A simple example of how to use the [`nmsg`](https://github.com/farsightsec/nmsg)API. It reads packets from a network interface, converts them to NMSG, and
 mirrors the payloads to a binary file and to stdout. Originally published in
-[Farsight Security's Network Message, Volume 4: The C Programming API](https://www.farsightsecurity.com/Blog/20150218-mschiffm-nmsg-api-c/).
+[Farsight Security's Network Message, Volume 4: The C Programming API](https://www.domaintools.com/resources/blog/farsights-network-message-volume-4-the-c-programming-api/).
 
 ## nmsgpacket example
 To wit:
