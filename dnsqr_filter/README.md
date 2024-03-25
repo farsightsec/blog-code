@@ -2,7 +2,7 @@
 A reusable example of an [`nmsg`](https://github.com/farsightsec/nmsg) filter
 using [`wdns`](https://github.com/farsightsec/wdns) to filter interesting
 DNS traffic out of a passive DNS stream. Originally published in
-[Processing Passive DNS With the nmsg C API](https://www.farsightsecurity.com/Blog/20150318-cmikk-processing-pdns/).
+[Processing Passive DNS With the nmsg C API](https://www.domaintools.com/resources/blog/processing-passive-dns-with-the-nmsg-c-api/).
 
 The filter included in `edns_filter.c` looks for non-`EDNS0` responses
 to `EDNS0` queries, which indicates an authoritative server not complying

@@ -3,7 +3,7 @@ This is `sratesttool`. It is an introductory example of how to use the `libaxa`
 API to connect to an SRA server and stream data.
 
 Originally published in
-[Farsight's Advanced Exchange Access: The C Programming API, Part One](https://www.farsightsecurity.com/Blog/20150730-mschiffm-axa-api-c-1/).
+[Farsight's Advanced Exchange Access: The C Programming API, Part One](https://www.domaintools.com/resources/user-guides/the-axa-api-reference/).
 
 ## sratesttool examples
 An example using Farsight's Heartbeat channel (SIE channel 255):

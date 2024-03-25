@@ -4,7 +4,7 @@ packets and prints to stdout a 5-tuple of source IP, source port, destination
 IP, destination port, protocol. If configured to do so, it will also construct
 `base`:`ipconn` encoded NMSGs and send to them to a network socket. It was
 originally published in
-[Farsight Security's Network Message, Volume 5: The Python Programming API](https://www.farsightsecurity.com/Blog/20150225-mschiffm-nmsg-api-python/).
+[Farsight Security's Network Message, Volume 5: The Python Programming API](https://www.domaintools.com/resources/blog/farsights-network-message-volume-5-the-python-programming-api/).
 
 ## pynmsgpacket example
 To wit:
