@@ -94,7 +94,7 @@ def main():
 def is_ipv4_tcp_udp(msg):
     # AND off first 4 bits of payload (IP packet) to ensure IP version is 4
     if int(ord(msg['payload'][0])) & 0x04 == 4:
-        if get_proto(msg) == socket.IPPROTO_TCP or socket.IPPROTO_UDP:
+        if get_proto(msg) == socket.IPPROTO_TCP or get_proto(msg) == socket.IPPROTO_UDP:
             return True
     return False
 
